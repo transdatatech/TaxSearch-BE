@@ -64,3 +64,14 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Project Setup Developer Guide
+
+Install project using laravel build
+It will install the complete dev enviroment i.e mysql, myphpadmin and laravel 
+composer require laravel/breeze --dev
+php artisan breeze:install api
+php artisan migrate
+Myphpadmin will be access through 8001 port
+
+
