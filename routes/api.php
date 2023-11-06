@@ -15,5 +15,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
+    $user=$request->user();
+    if($user->id>0){
+        $role=$user->roles()->pluck('name'); 
+        return [
+            'user'=>$user,
+            'role'=>$role
+        ];
+    }else{
+        return [
+            'user'=>$user,
+            'role'=>[],
+        ];
+    }
+   
 });
