@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PropertyFile extends Model
+class FileBatch extends Model
 {
     use HasFactory;
-
-    protected $table = 'property_files';
+    protected $table = 'file_batches';
 
     protected $fillable = [
-        'name','batch_id','status_id','path'
+        'name',
+        'user_id'
     ];
 }

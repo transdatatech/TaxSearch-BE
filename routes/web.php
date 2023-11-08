@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PropertyFileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,5 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
+
+Route::get('/dashboard',function(){
+   echo json_encode(['msg'=>'User Logged In Successfully']);
+});
+
+Route::middleware(['auth:sanctum'])->resource('property_files',PropertyFileController::class);
 
 require __DIR__.'/auth.php';
