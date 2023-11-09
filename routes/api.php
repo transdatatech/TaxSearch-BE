@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\PropertyFileController;
+use App\Http\Controllers\PropertyFileDataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     $user=$request->user();
     if($user->id>0){
-        $role=$user->roles()->pluck('name'); 
+        $role=$user->roles()->pluck('name');
         return [
             'user'=>$user,
             'role'=>$role
@@ -29,7 +31,16 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
             'role'=>[],
         ];
     }
-   
+
 });
 
-Route::middleware(['auth:sanctum'])->resource('property_files',PropertyFileController::class);
+//Auth Api to test in Postman
+Route::post('login',[AuthController::class,'loginUser']);
+Route::middleware('auth:sanctum')->post('logout',[AuthController::class,'logoutUser']);
+
+//Tax search api routes
+Route::middleware(['auth:sanctum'])->group(function (){
+    Route::resource('property_files',PropertyFileController::class);
+    Route::resource('property_files_data',PropertyFileDataController::class);
+});
+
