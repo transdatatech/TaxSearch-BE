@@ -5,6 +5,8 @@ use App\Http\Controllers\PropertyFileDataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\PaymentMethodController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,29 +20,38 @@ use App\Http\Controllers\Api\AuthController;
 */
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    $user=$request->user();
-    if($user->id>0){
-        $role=$user->roles()->pluck('name');
+    $user = $request->user();
+    if ($user->id > 0) {
+        $role = $user->roles()->pluck('name');
+        $userPaymentAccounts = $user->userPaymentAccount()->get();
+        $userPaymentMethods = $user->userPaymentMethods()->get();
         return [
-            'user'=>$user,
-            'role'=>$role
+            'user' => $user,
+            'role' => $role,
+            'user_payment_accounts' => $userPaymentAccounts,
+            'user_payment_methods' => $userPaymentMethods,
         ];
-    }else{
+    } else {
         return [
-            'user'=>$user,
-            'role'=>[],
+            'user' => $user,
+            'role' => [],
+            'user_payment_accounts' => [],
+            'user_payment_methods' => [],
         ];
     }
 
 });
 
 //Auth Api to test in Postman
-Route::post('login',[AuthController::class,'loginUser']);
-Route::middleware('auth:sanctum')->post('logout',[AuthController::class,'logoutUser']);
+Route::post('login', [AuthController::class, 'loginUser']);
+Route::post('register', [RegisteredUserController::class, 'store']);
+Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logoutUser']);
 
 //Tax search api routes
-Route::middleware(['auth:sanctum'])->group(function (){
-    Route::resource('property_files',PropertyFileController::class);
-    Route::resource('property_files_data',PropertyFileDataController::class);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::resource('property_files', PropertyFileController::class);
+    Route::resource('property_files_data', PropertyFileDataController::class);
+    Route::resource('payment_methods', PaymentMethodController::class);
+    Route::post('create_payment_method_setup_intent', [PaymentMethodController::class, 'create_card_setup_intent']);
 });
 

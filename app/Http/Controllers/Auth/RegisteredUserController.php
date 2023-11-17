@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\CustomerPaymentMethod;
+use App\Models\PaymentCustomer;
+use App\Models\PaymentMode;
 use App\Models\User;
+use App\Traits\StripeCustomerTrait;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 //use Illuminate\Http\Response;
@@ -12,8 +16,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Symfony\Component\HttpFoundation\Response;
 
+
 class RegisteredUserController extends Controller
 {
+    use StripeCustomerTrait;
     /**
      * Handle an incoming registration request.
      *
@@ -28,19 +34,32 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-
-        $user = User::create([
+        $user_details= [
             'first_name' => ucfirst($request->first_name),
             'last_name' => ucfirst($request->last_name),
             'phone_no'=>$request->mobile,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-        ]);
+        ];
+        $user = User::create($user_details);
         $user->addRole('client');
         event(new Registered($user));
-       // Auth::login($user);
+        $paymentMode = PaymentMode::select('id')->where(['name' => 'stripe', 'status' => true])->get()->toArray();
+        if(!empty($paymentMode)){
+            $paymentModeId = $paymentMode[0]['id'];
+            $addUserToStripe=$this->createCustomer($user_details);
+            $message="";
+            if(!empty($addUserToStripe)){
+                PaymentCustomer::create([
+                    'user_id'=>$user->id,
+                    'payment_mode_id'=>$paymentModeId,
+                    'customer_id'=>$addUserToStripe->id
+            ]);
+                $message="and Stripe as customer";
+            }
+        }
         return response()->json([
             'status'=>true,
-            'message' => 'You have registered Successfully , Check you mail to verify the email address'], 200);
+            'message' => 'You have registered Successfully on portal '.$message.', Check you mail to verify the email address'], 200);
     }
 }
