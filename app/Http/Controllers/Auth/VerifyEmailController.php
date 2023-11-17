@@ -19,9 +19,9 @@ class VerifyEmailController extends Controller
      */
     public function __invoke(Request $request): RedirectResponse
     {
-        
-        $user=User::find($request->segment(2));
-        if($user->id>0){
+
+        $user=User::find($request->segment(3));
+        if(!is_null($user)){
             if ($user->hasVerifiedEmail()) {
                 return redirect()->intended(
                     config('app.frontend_url').RouteServiceProvider::HOME.'?verified=1'
@@ -35,9 +35,9 @@ class VerifyEmailController extends Controller
             );
         }else{
             return redirect()->intended(
-                config('app.frontend_url').RouteServiceProvider::HOME.'?verified=1'
-            ); 
+                config('app.frontend_url').RouteServiceProvider::HOME.'?verified=0'
+            );
         }
-       
+
     }
 }
