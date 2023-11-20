@@ -13,4 +13,8 @@ class FileStatus extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function propertyFilesData(){
+        return $this->hasMany(PropertyFileData::class);
+    }
 }

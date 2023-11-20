@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\InvoicePaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,9 +44,9 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 //Auth Api to test in Postman
-Route::post('login', [AuthController::class, 'loginUser']);
-Route::post('register', [RegisteredUserController::class, 'store']);
-Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logoutUser']);
+Route::post('login_token', [AuthController::class, 'loginUser']);
+Route::post('api_register', [RegisteredUserController::class, 'store']);
+Route::middleware('auth:sanctum')->post('api_logout', [AuthController::class, 'logoutUser']);
 
 //Tax search api routes
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -53,5 +54,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('property_files_data', PropertyFileDataController::class);
     Route::resource('payment_methods', PaymentMethodController::class);
     Route::post('create_payment_method_setup_intent', [PaymentMethodController::class, 'create_card_setup_intent']);
+    Route::resource('invoice_payments', InvoicePaymentController::class);
 });
 

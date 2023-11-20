@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CustomerPaymentMethod;
+use App\Models\User;
 use App\Traits\StripeCustomerPaymentMethodTrait;
 use App\Traits\StripeCustomerTrait;
 use App\Traits\StripeSetupPaymentIntentTrait;

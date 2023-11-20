@@ -30,6 +30,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
+            'phone'=>['required'],
             'mobile'=>['required'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -37,9 +38,11 @@ class RegisteredUserController extends Controller
         $user_details= [
             'first_name' => ucfirst($request->first_name),
             'last_name' => ucfirst($request->last_name),
-            'phone_no'=>$request->mobile,
+            'phone_no'=>$request->phone,
+            'mobile_no'=>$request->mobile,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'is_profile_completed'=>false,
         ];
         $user = User::create($user_details);
         $user->addRole('client');

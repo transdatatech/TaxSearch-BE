@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('invoice_payments', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('invoice_id');
+            $table->string('payment_intent')->index();
             $table->timestamps();
+
+            $table->foreign('invoice_id')->references('id')->on('invoices')
+                ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
