@@ -24,18 +24,18 @@ class VerifyEmailController extends Controller
         if(!is_null($user)){
             if ($user->hasVerifiedEmail()) {
                 return redirect()->intended(
-                    config('app.frontend_url').RouteServiceProvider::HOME.'?verified=1'
+                    config('app.frontend_url').'/verified'
                 );
             }
             if ($user->markEmailAsVerified()) {
                 event(new Verified($request->user()));
             }
             return redirect()->intended(
-                config('app.frontend_url').RouteServiceProvider::HOME.'?verified=1'
+                config('app.frontend_url').'/verified'
             );
         }else{
             return redirect()->intended(
-                config('app.frontend_url').RouteServiceProvider::HOME.'?verified=0'
+                config('app.frontend_url').'/invalid-verification'
             );
         }
 
