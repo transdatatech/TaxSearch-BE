@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\InvoicePaymentController;
+use App\Http\Controllers\StateController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,5 +57,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('payment_methods', PaymentMethodController::class);
     Route::post('create_payment_method_setup_intent', [PaymentMethodController::class, 'create_card_setup_intent']);
     Route::resource('invoice_payments', InvoicePaymentController::class);
+    Route::resource('states', StateController::class);
+    Route::resource('users',UserController::class);
+    Route::post('user_states', [UserController::class,'user_states']);
 });
 
