@@ -57,4 +57,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(CustomerPaymentMethod::class);
     }
 
+    public function states(){
+       return $this->belongsToMany(State::class,'state_users');
+    }
+
 }

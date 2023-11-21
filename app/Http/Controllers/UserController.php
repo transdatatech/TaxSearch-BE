@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\State;
 use App\Models\User;
 use App\Models\UserState;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,7 +15,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+//
     }
 
     /**
@@ -104,19 +105,21 @@ class UserController extends Controller
             if ($validator->fails()) {
                 return setErrorResponse("Validation error's", $validator->errors()->messages());
             }
-            $state=State::where('id',$request->state_id)->first();
-            if($state!=null){
+            $state=State::find($request->state_id);
+            $user=User::find($request->user_id);
+            if($state!=null && $user!=null ){
                 $userStateData = [
-                    'user_id'=>$request->user_id,
-                    'state_id'=>$request->state_id,
                     'price'=>$request->price,
+                    'created_at'=>Carbon::now(),
+                    'updated_at'=>Carbon::now(),
                 ];
                 if($state->price>=$request->price){
-                    $state = UserState::updateOrCreate(['user_id' => $request->user_id,'state_id'=>$request->state_id], $userStateData);
-                    if ($state->wasRecentlyCreated) {
+                    $checkStateUser=$user->states()->wherePivot('state_id',$state->id)->exists();
+                    if(!$checkStateUser){
+                        $user->states()->attach($state->id,$userStateData);
                         return setSuccessResponse('User State with price added successfully', []);
-                    } else {
-                        return setSuccessResponse('User State already exist and price is updated', []);
+                    }else{
+                        return setErrorResponse('User State with price already exists', []);
                     }
                 }else{
                     return setErrorResponse('User State with price should be less than '.number_format($state->price,2), []);
