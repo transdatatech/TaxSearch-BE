@@ -11,6 +11,7 @@ use App\Models\PropertyFileData;
 use App\Models\State;
 use App\Traits\StripeCustomerTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -28,7 +29,7 @@ class PropertyFileDataController extends Controller
             }])->where(['user_id'=>auth()->user()->id])->get();
             return  setSuccessResponse('Property file data retrieved',FileBatchResource::collection($propertyFiles));
         }catch (\Exception $e){
-            echo $e->getMessage();
+            Log::error($e->getMessage());
             return setErrorResponse('Something went wrong on Server!!',[]);
         }
     }
@@ -137,6 +138,7 @@ class PropertyFileDataController extends Controller
             }
             return setErrorResponse('File data required to for processing');
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return setErrorResponse('Something went wrong on Server!!');
         }
     }

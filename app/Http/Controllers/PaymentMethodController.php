@@ -8,6 +8,7 @@ use App\Traits\StripeCustomerPaymentMethodTrait;
 use App\Traits\StripeCustomerTrait;
 use App\Traits\StripeSetupPaymentIntentTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class PaymentMethodController extends Controller
@@ -36,6 +37,7 @@ class PaymentMethodController extends Controller
              return setErrorResponse('No payment methods found',[]);
            }
         }catch (\Exception $e){
+            Log::error($e->getMessage());
             return setErrorResponse('Something went wrong on server!!',[]);
         }
     }
@@ -87,7 +89,7 @@ class PaymentMethodController extends Controller
                 return setErrorResponse("Payment Method not added Successfully ", []);
             }
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            Log::error($e->getMessage());
             return setErrorResponse("Something went wrong on Server!!", []);
         }
 
@@ -178,6 +180,7 @@ class PaymentMethodController extends Controller
                 }
             }
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return setErrorResponse('Something went wrong on Server!!');
         }
     }

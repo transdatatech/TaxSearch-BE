@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\StateResource;
 use App\Models\State;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class StateController extends Controller
@@ -22,6 +23,7 @@ class StateController extends Controller
                 return setErrorResponse('States with price not found', []);
             }
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return setErrorResponse('Something went wrong on server !!', []);
         }
     }
@@ -60,6 +62,7 @@ class StateController extends Controller
                 return setSuccessResponse('State with price already exists and updated',StateResource::make($state));
             }
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return setErrorResponse('Something went wrong on server !!', []);
         }
     }
@@ -77,7 +80,7 @@ class StateController extends Controller
                 return setErrorResponse('State with price not found', []);
             }
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            Log::error($e->getMessage());
             return setErrorResponse('Something went wrong on server !!', []);
         }
 
@@ -123,7 +126,7 @@ class StateController extends Controller
             }
 
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            Log::error($e->getMessage());
             return setErrorResponse('Something went wrong on server !!', []);
         }
     }

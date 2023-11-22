@@ -6,6 +6,7 @@ use App\Models\Invoice;
 use App\Models\invoicePayment;
 use App\Traits\StripePaymentTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
 
@@ -77,8 +78,7 @@ class InvoicePaymentController extends Controller
             }
 
         } catch (\Exception $e) {
-
-            print_r($e->getMessage()." ".$e->getLine());
+            Log::error($e->getMessage());
             return setErrorResponse('Something went wrong on server!!', []);
         }
 

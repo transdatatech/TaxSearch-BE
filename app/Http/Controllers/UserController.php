@@ -207,7 +207,6 @@ class UserController extends Controller
             }
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            echo $e->getMessage();
             return setErrorResponse('Something went wrong on server!!', []);
         }
     }
