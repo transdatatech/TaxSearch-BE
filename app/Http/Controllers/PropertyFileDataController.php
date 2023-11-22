@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FileBatchResource;
 use App\Models\FileBatch;
 use App\Models\FileStatus;
 use App\Models\Invoice;
@@ -25,7 +26,7 @@ class PropertyFileDataController extends Controller
             $propertyFiles=FileBatch::with(['propertyFilesData'=>function($q){
                 $q->whereNotNull('batch_id')->get();
             }])->where(['user_id'=>auth()->user()->id])->get();
-            return  setSuccessResponse('Data retrieved',['data'=>$propertyFiles]);
+            return  setSuccessResponse('Property file data retrieved',FileBatchResource::collection($propertyFiles));
         }catch (\Exception $e){
             echo $e->getMessage();
             return setErrorResponse('Something went wrong on Server!!',[]);
