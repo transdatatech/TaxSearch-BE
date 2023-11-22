@@ -6,12 +6,10 @@ use App\Models\FileBatch;
 use App\Models\FileStatus;
 use App\Models\Invoice;
 use App\Models\InvoiceDetail;
-use App\Models\PropertyFile;
 use App\Models\PropertyFileData;
 use App\Models\State;
 use App\Traits\StripeCustomerTrait;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 

@@ -25,7 +25,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'mobile_no',
         'email',
         'password',
-        'is_profile_completed'
+        'is_profile_completed',
+        'is_active',
     ];
 
     /**
@@ -59,6 +60,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function states(){
        return $this->belongsToMany(State::class,'state_users');
+    }
+
+    public function isActive()
+    {
+        return $this->is_active;
     }
 
 }

@@ -60,5 +60,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('states', StateController::class);
     Route::resource('users',UserController::class);
     Route::post('user_states', [UserController::class,'user_states']);
+    Route::post('users/verify_email',[UserController::class,'send_verification_email_notification']);
+    Route::post('users/active', [UserController::class,'active_inactive_user']);
+    Route::post('users/in_active', [UserController::class,'active_inactive_user']);
 });
 

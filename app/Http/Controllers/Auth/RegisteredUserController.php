@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\CustomerPaymentMethod;
 use App\Models\PaymentCustomer;
 use App\Models\PaymentMode;
 use App\Models\User;
 use App\Traits\StripeCustomerTrait;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
-//use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Symfony\Component\HttpFoundation\Response;
