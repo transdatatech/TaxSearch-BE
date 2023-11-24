@@ -13,9 +13,14 @@ class Invoice extends Model
 
     protected $fillable = [
         'user_id',
+        'uuid',
         'discount',
         'tax',
         'total_amount',
         'comments'
     ];
+
+    public function invoiceDetails(){
+        return $this->hasMany(InvoiceDetail::class);
+    }
 }

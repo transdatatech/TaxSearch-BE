@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FileBatchResource;
+use App\Models\FileBatch;
 use App\Models\FileStatus;
 use App\Models\Invoice;
 use App\Models\InvoiceDetail;
@@ -9,8 +11,9 @@ use App\Models\PropertyFileData;
 use App\Models\State;
 use App\Traits\StripeCustomerTrait;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class PropertyFileDataController extends Controller
 {
@@ -20,6 +23,15 @@ class PropertyFileDataController extends Controller
      */
     public function index()
     {
+        try{
+            $propertyFiles=FileBatch::with(['propertyFilesData'=>function($q){
+                $q->whereNotNull('batch_id')->get();
+            }])->where(['user_id'=>auth()->user()->id])->get();
+            return  setSuccessResponse('Property file data retrieved',FileBatchResource::collection($propertyFiles));
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return setErrorResponse('Something went wrong on Server!!',[]);
+        }
     }
 
     /**
@@ -99,13 +111,14 @@ class PropertyFileDataController extends Controller
 
                 }
                 //Generating invoice summary
-                $invoiceSummary = [
+                $invoiceSummaryData = [
+                    'uuid'=>Str::uuid()->toString(),
                     'user_id' => $request->user()->id,
                     'discount' => $discountPrice,
                     'tax' => $taxAmount,
                     'total_amount' => $totalPrice
                 ];
-                $invoiceSummary = Invoice::create($invoiceSummary);
+                $invoiceSummary = Invoice::create($invoiceSummaryData);
                 $invoiceDetailData = array_map(function ($arr) use ($invoiceSummary) {
                     return $arr + ['invoice_id' => $invoiceSummary->id];
                 }, $invoiceDetailData);
@@ -119,12 +132,13 @@ class PropertyFileDataController extends Controller
                     'unprocessed_file_data' => $unProcessedFileData,
                     'file_data_errors' => $validationErrors,
                     'invoice_details' => $invoiceDetailData,
-                    'invoice_summary' => $invoiceSummary,
+                    'invoice_summary' => $invoiceSummaryData,
                 ];
                 return setSuccessResponse("File data added and invoice generated successfully", $responseData);
             }
             return setErrorResponse('File data required to for processing');
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return setErrorResponse('Something went wrong on Server!!');
         }
     }

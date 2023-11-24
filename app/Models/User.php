@@ -22,8 +22,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'first_name',
         'last_name',
         'phone_no',
+        'mobile_no',
         'email',
         'password',
+        'is_profile_completed',
+        'is_active',
     ];
 
     /**
@@ -53,6 +56,15 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function userPaymentMethods(){
         return $this->hasMany(CustomerPaymentMethod::class);
+    }
+
+    public function states(){
+       return $this->belongsToMany(State::class,'state_users');
+    }
+
+    public function isActive()
+    {
+        return $this->is_active;
     }
 
 }

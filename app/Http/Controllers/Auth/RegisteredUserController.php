@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\CustomerPaymentMethod;
 use App\Models\PaymentCustomer;
 use App\Models\PaymentMode;
 use App\Models\User;
 use App\Traits\StripeCustomerTrait;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
-//use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +27,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
+            'phone'=>['required'],
             'mobile'=>['required'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -37,9 +35,11 @@ class RegisteredUserController extends Controller
         $user_details= [
             'first_name' => ucfirst($request->first_name),
             'last_name' => ucfirst($request->last_name),
-            'phone_no'=>$request->mobile,
+            'phone_no'=>$request->phone,
+            'mobile_no'=>$request->mobile,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'is_profile_completed'=>false,
         ];
         $user = User::create($user_details);
         $user->addRole('client');

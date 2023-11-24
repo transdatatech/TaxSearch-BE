@@ -18,7 +18,11 @@ class State extends Model
     ];
 
     public  function users(){
-        return $this->belongsToMany(User::class,'state_users','state_id','user_id')->select('state_users.price','state_users.state_id','state_users.user_id');
+        return $this->belongsToMany(User::class,'state_users')->select('state_users.price','state_users.state_id','state_users.user_id');
+    }
+
+    public function propertyFilesData(){
+        return $this->belongsToMany(PropertyFileData::class,'status_id','id');
     }
 
 }

@@ -7,6 +7,7 @@ use App\Models\FileStatus;
 use App\Models\PropertyFile;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class PropertyFileController extends Controller
@@ -81,6 +82,7 @@ class PropertyFileController extends Controller
             }
             return  setErrorResponse('No files were uploaded');
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return  setErrorResponse('Something went wrong on Server!!');
         }
 

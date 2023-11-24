@@ -17,4 +17,8 @@ class InvoiceDetail extends Model
         'data',
         'price',
     ];
+
+    public function invoices(){
+        return $this->belongsTo(Invoice::class);
+    }
 }
